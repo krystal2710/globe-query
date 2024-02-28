@@ -19,7 +19,7 @@ def convert_quad(input_filename, output_filename):
         json.dump(res, output_file)
     
     print("Completed conversion of {input_filename}".format(input_filename=input_filename))
-    print("Save to {output_filename}".format(output_filename=output_filename))
+    print("Saved to {output_filename}".format(output_filename=output_filename))
 
 def convert_cmrc(input_filename, output_filename):
     with open(input_filename) as input_file:

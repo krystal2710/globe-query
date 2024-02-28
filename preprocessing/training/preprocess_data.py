@@ -1,11 +1,16 @@
-import json
-import sys
-import os
-sys.path.append(os.getcwd())
-from services.convert_data import convert_quad
-from services.convert_data import convert_cmrc
-
 def main():
+    import json
+    import sys
+    import os
+    from dotenv import load_dotenv
+
+    load_dotenv()
+    sys.path.append(os.getenv('ROOT_DIR'))
+
+    from services.convert_data import convert_quad
+    from services.convert_data import convert_cmrc
+
+    #convert datasets from hierarchical model to relational model (tabular format)
     convert_quad("data/raw/squad-train-v1.1.json", "data/processed/squad-train-v1.1.json")
     convert_quad("data/raw/korquad-train-v1.0.json", "data/processed/korquad-train-v1.0.json")
     convert_quad("data/raw/germanquad-train.json", "data/processed/germanquad-train.json")
