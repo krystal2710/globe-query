@@ -38,7 +38,7 @@ def translate_all(input_filename, input_lang, output_filename, output_lang_lists
             try:
                 translated_query = translate_text(output_lang, row["question"])
                 new_row = {"context":row["context"], "question": translated_query, "qid": row["qid"], "context_lang":input_lang, "query_lang":output_lang}
-                json.dump(new_row, output_file)
+                output_file.write(json.dumps(new_row) + "\n")
             except:
                 print("Error translating row {i} with qid {qid}".format(i=i, qid=row["qid"]))
 
