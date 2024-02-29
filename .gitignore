@@ -162,3 +162,6 @@ cython_debug/
 mcolbert-env
 
 creds/
+
+#ignore large files, already had them available in github
+korquad-train-v1.0.json
