@@ -1,6 +1,9 @@
 import json
 
 def convert_quad(input_filename, output_filename):
+    """
+    Convert hierarchical data in input_filename to tabular data and save it to output_filename.
+    """ 
     with open(input_filename) as input_file:
         data = json.load(input_file)
         if "data" in data:
@@ -22,6 +25,9 @@ def convert_quad(input_filename, output_filename):
     print("Saved to {output_filename}".format(output_filename=output_filename))
 
 def convert_cmrc(input_filename, output_filename):
+    """
+    Convert hierarchical cmrc data in input_filename to tabular data and save it to output_filename.
+    """
     with open(input_filename) as input_file:
         data = json.load(input_file)
         if "data" in data:
