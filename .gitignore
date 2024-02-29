@@ -164,4 +164,4 @@ mcolbert-env
 creds/
 
 #ignore large files, already had them available in github
-korquad-train-v1.0.json
+data/processed/korquad-train-v1.0.json
