@@ -1,3 +1,7 @@
+import json
+from dotenv import load_dotenv
+load_dotenv()
+
 def translate_text(target: str, text: str) -> dict:
     """Translates text into the target language.
 
@@ -15,13 +19,17 @@ def translate_text(target: str, text: str) -> dict:
     # will return a sequence of results for each text.
     result = translate_client.translate(text, target_language=target)
 
-    return result
-
-def translate_data(input_lang, output_lang, data):
+    return result["translatedText"]
     
-
-if __name__ == '__main__':
-    from dotenv import load_dotenv
-    load_dotenv()
-
-    translate_text("en", "안녕하세요")
+def translate_all(input_filename, input_lang, output_filename, output_lang_lists):
+    with open(input_filename) as input_file:
+        data = json.load(input_file)
+    
+    res = []
+    for row in data:
+        for output_lang in output_lang_lists:
+            new_row = {"context":row["context"], "question":translate_text(output_lang), "qid": row["qid"], "context_lang":input_lang, "query_lang":output_lang}
+            res.append(new_row)
+    
+    with open(output_filename, 'w') as output_file:
+        json.dump(res, output_file)
