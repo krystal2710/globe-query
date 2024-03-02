@@ -1,7 +1,10 @@
 import json
 import uuid
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
-def convert_quad(input_filename, output_filename, contexts_filename = "data/processed/contexts.jsonl", queries_filename = "data/processed/queries.jsonl"):
+def convert_quad(input_filename, output_filename, contexts_filename = os.getenv("CONTEXTS_PATH"), queries_filename = os.getenv("QUERIES_PATH")):
     """
     Convert hierarchical data in input_filename to tabular data and save it to output_filename.
     """ 
@@ -48,7 +51,7 @@ def convert_quad(input_filename, output_filename, contexts_filename = "data/proc
     print("Added new contexts and queries to {contexts_filename} and {queries_filename}".format(contexts_filename=contexts_filename, queries_filename=queries_filename))
 
 
-def convert_cmrc(input_filename, output_filename, contexts_filename = "data/processed/contexts.jsonl", queries_filename = "data/processed/queries.jsonl"):
+def convert_cmrc(input_filename, output_filename, contexts_filename = os.getenv("CONTEXTS_PATH"), queries_filename = os.getenv("QUERIES_PATH")):
     """
     Convert hierarchical cmrc data in input_filename to tabular data and save it to output_filename.
     """
