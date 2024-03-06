@@ -1,4 +1,3 @@
-import json
 import sys
 import os
 
@@ -37,12 +36,13 @@ def convert_all_quads():
     convert_cmrc("data/raw/cmrc-train-v2018.json", "data/processed/cmrc-train-v2018.json")
 
 def translate_all_data():
-    translate_all("data/processed/test.json", "en", "data/processed/test-translated.json", ALL_LANGUAGES[1:], "SQUAD_PROGRESS")
-    # translate_all("data/processed/germanquad-train.json", "de", "data/processed/germanquad-train-translated.json", ALL_LANGUAGES[0] + ALL_LANGUAGES[2:])
-    # translate_all("data/processed/korquad-train-v1.0.json", "ko", "data/processed/korquad-train-translated.json", ALL_LANGUAGES[0:2]+ALL_LANGUAGES[3:])
-    # translate_all("data/processed/fquad-train.json", "fr", "data/processed/fquad-train-translated.json", ALL_LANGUAGES[0:3]+ALL_LANGUAGES[4:])
-    # translate_all("data/processed/uitviquad-train.json", "vi", "data/processed/uitviquad-train-translated.json", ALL_LANGUAGES[0:4]+ALL_LANGUAGES[5:])
-    # translate_all("data/processed/cmrc-train-v2018.json", "zh", "data/processed/cmrc-train-translated.json", ALL_LANGUAGES[0:5])
+    #Require large amount of time to translate all queries. May want to split into multiple runs/machines
+    translate_all("data/processed/squad-train-v1.1.json", "en", "data/processed/squad-train-translated.jsonl", ALL_LANGUAGES[1:])
+    translate_all("data/processed/germanquad-train.json", "de", "data/processed/germanquad-train-translated.json", ALL_LANGUAGES[0:1] + ALL_LANGUAGES[2:])
+    translate_all("data/processed/korquad-train-v1.0.json", "ko", "data/processed/korquad-train-translated.json", ALL_LANGUAGES[0:2]+ALL_LANGUAGES[3:])
+    translate_all("data/processed/fquad-train.json", "fr", "data/processed/fquad-train-translated.json", ALL_LANGUAGES[0:3]+ALL_LANGUAGES[4:])
+    translate_all("data/processed/uitviquad-train.json", "vi", "data/processed/uitviquad-train-translated.json", ALL_LANGUAGES[0:4]+ALL_LANGUAGES[5:])
+    translate_all("data/processed/cmrc-train-v2018.json", "zh", "data/processed/cmrc-train-translated.json", ALL_LANGUAGES[0:5])
             
 def main():
 
@@ -53,7 +53,7 @@ def main():
     convert_all_quads()
 
     #translate all queries from one language to all other languages and save to new files
-    # translate_all_data()
+    translate_all_data()
 
 if __name__ == '__main__':
     main()
