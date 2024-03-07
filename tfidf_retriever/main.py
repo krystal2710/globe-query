@@ -53,11 +53,5 @@ if __name__ == '__main__':
         # Convert top k from tfidf format to EQA format -> unanswerable candidates
         relevant_dataset_path = PATHS.TFIDF_PATH['relevant'] + PATHS.DATA['dataset_name'] + "_relevant.json"
         unans_candidates_path = PATHS.TFIDF_PATH['unans_cdd'] + PATHS.DATA['dataset_name'] + "_cdd.json"
-        convert_and_validate(relevant_dataset_path, unans_candidates_path, PATHS.DATA['dataset_path'])
-
-        # 3
-        # Combine the unanswerable candidates with answerable dataset
-        # cdd_path = PATHS.TFIDF_PATH["unans_cdd"] + PATHS.DATA['dataset_name'] + "_cdd.json"
-        # combine_dataset = combine(cdd_path, PATHS.DATA['dataset_path'], PATHS.DATA['save_path'], int(args.num_unanswerable))
-        # info(combine_dataset)
+        convert_and_validate(relevant_dataset_path, PATHS.DATA['save_path'], PATHS.DATA['dataset_path'])
 

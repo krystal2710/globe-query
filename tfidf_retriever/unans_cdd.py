@@ -53,46 +53,8 @@ def tfidf2eqa(relevant_dataset_path, unans_candidates_path):
     # Save the output
     write_output(unans_candidates_path, dataset_format)
 
-
-
-# Check if any raw_tfidf context is mixed in the ground_truth ==================================================================================
-def check_dataset(unans_candidates_path, dataset_path):
-
-    unans_cand_data = read_dataset(unans_candidates_path)['data']
-    ans_data = read_dataset(dataset_path)['data']
-
-    # Comparing two dataset
-    ans_dict = {} # the dictionary with key = question, value = [ground_truth]
-    count_overlap = 0
-    count_ques = 0
-    count_tfidf = 0
-
-    for item in ans_data:
-        context = item['context']
-        ques = item['question'] 
-        count_ques += 1        
-        if ques in ans_dict.keys():
-            ans_dict[ques].append(context)
-        else:
-            ans_dict[ques] = [context]
-
-    for item in unans_cand_data:
-        context = item['context'] 
-        count_tfidf += 1
-        ques = item['question']
-        if context in ans_dict[ques]: # check if there is any ground truth in the unans_candidate
-            count_overlap += 1
-
-    #PRINT THE COUNT
-    print("Unanswerable candidates info:")
-    print("Overlap:", count_overlap)
-    print("# of original ques:", count_ques)
-    print("# of unanswerable candidate question:", count_tfidf, "\n")
-
-
 # ========================================================================================================================
 # MAIN ===================================================================================================================
 
-def convert_and_validate(relevant_dataset_path, unans_candidates_path, dataset_path):
+def convert_and_validate(relevant_dataset_path, unans_candidates_path):
     tfidf2eqa(relevant_dataset_path, unans_candidates_path)
-    # check_dataset(unans_candidates_path, dataset_path)
