@@ -3,8 +3,11 @@ import json
 import argparse
 import os
 # from PATH import TFIDF_PATH, CURR_DIR
-
-
+import jsonlines
+from dotenv import load_dotenv
+load_dotenv()
+import sys
+sys.path.append(os.getenv('ROOT_DIR'))
 
 # RETRIEVE THE CURRENT DIRECTORY =====================================================================================================
 
@@ -45,8 +48,19 @@ def prepare_db(dataset_name, PATHS):
     """
 
     # Read the dataset from json ---------------------
-    dataset = read_dataset(PATHS.DATA["dataset_path"])
-    data = dataset['data']
+    data = read_dataset(PATHS.DATA["dataset_path"])
+
+    #Read the contexts file
+    context_search = {}
+    with jsonlines.open(os.getenv("CONTEXTS_PATH")) as reader:
+        for line in reader:
+            context_search[line["context_id"]] = line["context"]
+
+    #Read the queries file
+    query_search = {}
+    with jsonlines.open(os.getenv("QUERIES_PATH")) as reader:
+        for line in reader:
+            query_search[line["query_id"]] = line["query"]
 
     # Create dataset in db_form and prepare ground truth context for each questions ---------------------
     ques_dict, context_dict = {}, {}
@@ -58,7 +72,7 @@ def prepare_db(dataset_name, PATHS):
     count = 0  
     
     for item in data:
-        context = item["context"]
+        context = context_search[item["context_id"]]
 
         # If the context is not added
         if context not in contexts_set: 
@@ -74,7 +88,7 @@ def prepare_db(dataset_name, PATHS):
         contexts_set.add(context)
         
         # Add question and corresponding ground truth context
-        ques = item['question']
+        ques = query_search[item['query_id']]
         if ques in ques_dict.keys():
             ques_dict[ques].add(context)
         else:

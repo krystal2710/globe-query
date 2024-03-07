@@ -1,11 +1,11 @@
-export PYTHONPATH="${PYTHONPATH}:src/step1/DrQA"
-DATASET_PATH="data/SQuAD/original/squad_train.json"
-SAVE_PATH="data/SQuAD/adversarial/squad_train_step2.json"
+export PYTHONPATH="${PYTHONPATH}:tfidf_retriever/DrQA"
+DATASET_PATH="data/processed/uitviquad-train.json"
+SAVE_PATH="data/processed/uitviquad-train-neg.json"
 
-python src/step1/main.py \
+python tfidf_retriever/main.py \
     --dataset_path ${DATASET_PATH} \
     --save_path ${SAVE_PATH} \
-    --top_k 10 \
+    --top_k 5 \
     --gt_score False \
     --num_unanswerable 43799
 

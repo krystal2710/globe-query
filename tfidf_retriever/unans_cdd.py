@@ -1,6 +1,11 @@
 import json
 import argparse
 import os
+import jsonlines
+from dotenv import load_dotenv
+load_dotenv()
+import sys
+sys.path.append(os.getenv('ROOT_DIR'))
 
 # Read and write json file =====================================================================================
 def read_dataset(path):
@@ -21,22 +26,29 @@ def tfidf2eqa(relevant_dataset_path, unans_candidates_path):
     dataset = read_dataset(relevant_dataset_path)
     data = dataset['documents']
 
-    question_id = 0
+    # question_id = 0
     dataset_format = {'data': []}
+
+    #Read the contexts file
+    context_search = {}
+    with jsonlines.open(os.getenv("CONTEXTS_PATH")) as reader:
+        for line in reader:
+            context_search[line["context"]] = line["context_id"]
+
+    #Read the queries file
+    query_search = {}
+    with jsonlines.open(os.getenv("QUERIES_PATH")) as reader:
+        for line in reader:
+            query_search[line["query"]] = line["query_id"]
 
     # Iterate through each question and context in the tfidf
     for i in range(len(data)):
         item = {}
-        item['id'] = f'{question_id:08d}'
-        item['question'] = data[i]['question']
-        item['context'] = data[i]['context']
-        item["answers"] = {
-                "answer_start": [],
-                "text": []
-            }
+        item['query_id'] = query_search[data[i]['question']]
+        item['context_id'] = context_search[data[i]['context']]
 
         dataset_format['data'].append(item)
-        question_id += 1
+        # question_id += 1
 
     # Save the output
     write_output(unans_candidates_path, dataset_format)
@@ -83,4 +95,4 @@ def check_dataset(unans_candidates_path, dataset_path):
 
 def convert_and_validate(relevant_dataset_path, unans_candidates_path, dataset_path):
     tfidf2eqa(relevant_dataset_path, unans_candidates_path)
-    check_dataset(unans_candidates_path, dataset_path)
+    # check_dataset(unans_candidates_path, dataset_path)

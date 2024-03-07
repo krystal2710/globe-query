@@ -25,7 +25,7 @@ class TfidfDocRanker(object):
     Scores new queries by taking sparse dot products.
     """
 
-    def __init__(self, tfidf_path=None, db_path=None, strict=True):
+    def __init__(self, tfidf_path=None, db_path=None, strict=False):
         """
         Args:
             tfidf_path: path to saved model file

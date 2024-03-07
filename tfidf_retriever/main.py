@@ -57,7 +57,7 @@ if __name__ == '__main__':
 
         # 3
         # Combine the unanswerable candidates with answerable dataset
-        cdd_path = PATHS.TFIDF_PATH["unans_cdd"] + PATHS.DATA['dataset_name'] + "_cdd.json"
-        combine_dataset = combine(cdd_path, PATHS.DATA['dataset_path'], PATHS.DATA['save_path'], int(args.num_unanswerable))
-        info(combine_dataset)
+        # cdd_path = PATHS.TFIDF_PATH["unans_cdd"] + PATHS.DATA['dataset_name'] + "_cdd.json"
+        # combine_dataset = combine(cdd_path, PATHS.DATA['dataset_path'], PATHS.DATA['save_path'], int(args.num_unanswerable))
+        # info(combine_dataset)
 
