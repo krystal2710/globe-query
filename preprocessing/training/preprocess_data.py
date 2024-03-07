@@ -11,7 +11,7 @@ from services.translate_queries import translate_all
 
 ALL_LANGUAGES = ["en", "de", "ko", "fr", "vi", "zh"]
 
-def create_context_and_query_files(contexts_filename = "data/processed/contexts.jsonl", queries_filename = "data/processed/queries.jsonl"):
+def create_context_and_query_files(contexts_filename = os.getenv("CONTEXTS_PATH"), queries_filename = os.getenv("QUERIES_PATH")):
 
     with open(contexts_filename, "w") as f:
         # Create an empty JSONL file
@@ -38,11 +38,11 @@ def convert_all_quads():
 def translate_all_data():
     #Require large amount of time to translate all queries. May want to split into multiple runs/machines
     translate_all("data/processed/squad-train-v1.1.json", "en", "data/processed/squad-train-translated.jsonl", ALL_LANGUAGES[1:])
-    translate_all("data/processed/germanquad-train.json", "de", "data/processed/germanquad-train-translated.json", ALL_LANGUAGES[0:1] + ALL_LANGUAGES[2:])
-    translate_all("data/processed/korquad-train-v1.0.json", "ko", "data/processed/korquad-train-translated.json", ALL_LANGUAGES[0:2]+ALL_LANGUAGES[3:])
-    translate_all("data/processed/fquad-train.json", "fr", "data/processed/fquad-train-translated.json", ALL_LANGUAGES[0:3]+ALL_LANGUAGES[4:])
-    translate_all("data/processed/uitviquad-train.json", "vi", "data/processed/uitviquad-train-translated.json", ALL_LANGUAGES[0:4]+ALL_LANGUAGES[5:])
-    translate_all("data/processed/cmrc-train-v2018.json", "zh", "data/processed/cmrc-train-translated.json", ALL_LANGUAGES[0:5])
+    translate_all("data/processed/germanquad-train.json", "de", "data/processed/germanquad-train-translated.jsonl", ALL_LANGUAGES[0:1] + ALL_LANGUAGES[2:])
+    translate_all("data/processed/korquad-train-v1.0.json", "ko", "data/processed/korquad-train-translated.jsonl", ALL_LANGUAGES[0:2]+ALL_LANGUAGES[3:])
+    translate_all("data/processed/fquad-train.json", "fr", "data/processed/fquad-train-translated.jsonl", ALL_LANGUAGES[0:3]+ALL_LANGUAGES[4:])
+    translate_all("data/processed/uitviquad-train.json", "vi", "data/processed/uitviquad-train-translated.jsonl", ALL_LANGUAGES[0:4]+ALL_LANGUAGES[5:])
+    translate_all("data/processed/cmrc-train-v2018.json", "zh", "data/processed/cmrc-train-translated.jsonl", ALL_LANGUAGES[0:5])
             
 def main():
 
