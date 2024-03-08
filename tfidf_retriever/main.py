@@ -3,7 +3,6 @@ import argparse
 import os
 from retriever_tfidf import ranker_pipeline
 from unans_cdd import convert_and_validate
-from combine import combine, info
 
 
 # A class to store all the Path to the TF-IDF component and Info about the dataset
@@ -53,5 +52,5 @@ if __name__ == '__main__':
         # Convert top k from tfidf format to EQA format -> unanswerable candidates
         relevant_dataset_path = PATHS.TFIDF_PATH['relevant'] + PATHS.DATA['dataset_name'] + "_relevant.json"
         unans_candidates_path = PATHS.TFIDF_PATH['unans_cdd'] + PATHS.DATA['dataset_name'] + "_cdd.json"
-        convert_and_validate(relevant_dataset_path, PATHS.DATA['save_path'], PATHS.DATA['dataset_path'])
+        convert_and_validate(relevant_dataset_path, PATHS.DATA['save_path'])
 
