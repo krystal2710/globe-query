@@ -1,5 +1,6 @@
-import json
+import jsonlines
 from evaluate import load
+import json
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -7,14 +8,13 @@ import sys
 import os
 sys.path.append(os.getenv('ROOT_DIR'))
 
-from services.translate_queries import translate_text
 from transformers import MBartForConditionalGeneration, MBart50TokenizerFast
 
 def read_data(filename):
-    with open(filename, "r") as f:
+    with jsonlines.open(filename, "r") as f:
         data = []
         for line in f:
-            data.append(json.loads(line))
+            data.append(line)
     return data
 
 def translate_for_eval(data_filename):
@@ -47,7 +47,7 @@ def translate_for_eval(data_filename):
         translated_query = tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)
         
         #calculate bertscore
-        score = float(bertscore.compute(predictions=translated_query, references=[row["translated_query"]], lang=row["translated_lang"])["f1"][0])
+        score = float(bertscore.compute(predictions=translated_query, references=[row["translated_query"]], model_type="xlm-roberta-large")["f1"][0])
         res[row["original_lang"]][row["translated_lang"]] += score
 
         if i % 100 == 0:
@@ -66,7 +66,7 @@ def translate_for_eval(data_filename):
 def main():
     res = translate_for_eval("data/translation_evaluated/ggl_translate_sample.jsonl")
 
-    with open("data/translation_evaluated/results.json", "w") as f:
+    with open("data/translation_evaluated/results2.json", "w") as f:
         json.dump(res, f)
 
 if __name__ == "__main__":
