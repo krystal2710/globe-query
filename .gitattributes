@@ -1,2 +1,4 @@
 data/processed/squad-train-translated.jsonl filter=lfs diff=lfs merge=lfs -text
 data/processed/queries.jsonl filter=lfs diff=lfs merge=lfs -text
+data/training_input/triples.jsonl filter=lfs diff=lfs merge=lfs -text
+data/training_input/queries.tsv filter=lfs diff=lfs merge=lfs -text
