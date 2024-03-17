@@ -163,3 +163,6 @@ mcolbert-env
 
 creds/
 
+test*.*
+visuals.ipynb
+ColBERT
