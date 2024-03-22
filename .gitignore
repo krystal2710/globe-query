@@ -165,4 +165,15 @@ creds/
 
 test*.*
 visuals.ipynb
-ColBERT
+/data/
+
+#ColBERT .gitignore
+/experiments/
+/checkpoints/
+/data/
+/logs/
+/mlruns/
+/profiler/
+/logs/
+# Other
+.vscode
