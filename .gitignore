@@ -166,14 +166,15 @@ creds/
 test*.*
 visuals.ipynb
 /data/
+/experiments/
 
 #ColBERT .gitignore
-/experiments/
-/checkpoints/
-/data/
-/logs/
-/mlruns/
-/profiler/
-/logs/
+/ColBERT/experiments/
+/ColBERT/checkpoints/
+/ColBERT/data/
+/ColBERT/logs/
+/ColBERT/mlruns/
+/ColBERT/profiler/
+/ColBERT/logs/
 # Other
 .vscode
