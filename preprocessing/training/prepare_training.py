@@ -36,14 +36,14 @@ def create_triples(data_filepath, data_neg_filepath, triples_filepath = os.geten
         pos_pid = row["context_id"]
         try:
             neg_pid_list = data_neg[row["orig_query_id"]]
+        except:
+            count_not_found += 1
+        else:
             #iterate through each negative context
             for neg_pid in neg_pid_list:
                 triple = [qid, pos_pid, neg_pid]
                 triples_file.write(json.dumps(triple) + "\n")
                 count_triples += 1
-
-        except:
-            count_not_found += 1
 
     triples_file.close()
     print("Created {i} triples".format(i = count_triples))
@@ -62,8 +62,9 @@ def jsonl_to_tsv(data_filepath, output_data_filepath):
                 if key.endswith("_id"):
                     id = value
                 else:
-                    val = value
-            output_data_file.write("{id}\t{data}\n".format(id = id, data = val))
+                    val = value.replace("\n","")
+            if val and not val.isspace():
+                output_data_file.write("{id}\t{data}\n".format(id = id, data = val))
     output_data_file.close()
     print("Converted {file} to {output_file}".format(file = data_filepath, output_file = output_data_filepath))
 
@@ -73,15 +74,14 @@ def create_all_triples():
     create_triples("data/processed/fquad-train-translated.jsonl", "data/processed/fquad-train-neg.json")
     create_triples("data/processed/uitviquad-train-translated.jsonl", "data/processed/uitviquad-train-neg.json")
     create_triples("data/processed/germanquad-train-translated.jsonl", "data/processed/germanquad-train-neg.json")
-    create_triples("data/processed/cmrc-train-translated.jsonl", "data/processed/cmrc-train-neg.json")
 
 def convert_queries_and_contexts():
     jsonl_to_tsv("data/processed/queries.jsonl", "data/training_input/queries.tsv")
     jsonl_to_tsv("data/processed/contexts.jsonl", "data/training_input/contexts.tsv")
 
 def main():
-    create_all_triples()
     convert_queries_and_contexts()
+    create_all_triples()
 
 if __name__=="__main__":
     main()
