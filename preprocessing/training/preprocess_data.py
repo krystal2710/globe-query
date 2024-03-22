@@ -6,10 +6,9 @@ load_dotenv()
 sys.path.append(os.getenv('ROOT_DIR'))
 
 from services.convert_data import convert_quad
-from services.convert_data import convert_cmrc
 from services.translate_queries import translate_all
 
-ALL_LANGUAGES = ["en", "de", "ko", "fr", "vi", "zh"]
+ALL_LANGUAGES = ["en", "de", "ko", "fr", "vi"]
 
 def create_context_and_query_files(contexts_filename = os.getenv("CONTEXTS_PATH"), queries_filename = os.getenv("QUERIES_PATH")):
 
@@ -33,7 +32,6 @@ def convert_all_quads():
     convert_quad("data/raw/germanquad-train.json", "data/processed/germanquad-train.json")
     convert_quad("data/raw/fquad-train.json", "data/processed/fquad-train.json")
     convert_quad("data/raw/uitviquad-train.json", "data/processed/uitviquad-train.json")
-    convert_cmrc("data/raw/cmrc-train-v2018.json", "data/processed/cmrc-train-v2018.json")
 
 def translate_all_data():
     #Require large amount of time to translate all queries. May want to split into multiple runs/machines
@@ -41,8 +39,7 @@ def translate_all_data():
     translate_all("data/processed/germanquad-train.json", "de", "data/processed/germanquad-train-translated.jsonl", ALL_LANGUAGES[0:1] + ALL_LANGUAGES[2:])
     translate_all("data/processed/korquad-train-v1.0.json", "ko", "data/processed/korquad-train-translated.jsonl", ALL_LANGUAGES[0:2]+ALL_LANGUAGES[3:])
     translate_all("data/processed/fquad-train.json", "fr", "data/processed/fquad-train-translated.jsonl", ALL_LANGUAGES[0:3]+ALL_LANGUAGES[4:])
-    translate_all("data/processed/uitviquad-train.json", "vi", "data/processed/uitviquad-train-translated.jsonl", ALL_LANGUAGES[0:4]+ALL_LANGUAGES[5:])
-    translate_all("data/processed/cmrc-train-v2018.json", "zh", "data/processed/cmrc-train-translated.jsonl", ALL_LANGUAGES[0:5])
+    translate_all("data/processed/uitviquad-train.json", "vi", "data/processed/uitviquad-train-translated.jsonl", ALL_LANGUAGES[0:4])
             
 def main():
 

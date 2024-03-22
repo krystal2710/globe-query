@@ -37,7 +37,7 @@ def translate_all(input_filename, input_lang, output_filename, output_lang_lists
         original_row = {"context_id": row["context_id"], "query_id": row["query_id"], "orig_query_id": row["query_id"],"context_lang":input_lang, "query_lang":input_lang}
         output_file.write(json.dumps(original_row) + "\n")
 
-    lang_dict = {"en":"en_XX", "de":"de_DE", "ko":"ko_KR", "vi":"vi_VN", "zh":"zh_CN", "fr":"fr_XX"}
+    lang_dict = {"en":"en_XX", "de":"de_DE", "ko":"ko_KR", "vi":"vi_VN", "fr":"fr_XX"}
 
     for output_lang in output_lang_lists:
         for start in range(0,len(data),batch_size):
