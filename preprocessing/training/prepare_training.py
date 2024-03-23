@@ -76,8 +76,8 @@ def create_all_triples():
     create_triples("data/processed/germanquad-train-translated.jsonl", "data/processed/germanquad-train-neg.json")
 
 def convert_queries_and_contexts():
-    jsonl_to_tsv("data/processed/queries.jsonl", "data/training_input/queries.tsv")
-    jsonl_to_tsv("data/processed/contexts.jsonl", "data/training_input/contexts.tsv")
+    jsonl_to_tsv(os.getenv("QUERIES_PATH"), os.getenv("TRAINING_QUERIES_PATH"))
+    jsonl_to_tsv(os.getenv("CONTEXTS_PATH"), os.getenv("TRAINING_CONTEXTS_PATH"))
 
 def main():
     convert_queries_and_contexts()
