@@ -10,7 +10,7 @@ Additionally, this research explores the effectiveness of mColBERT across differ
 
 ## Data
 
-## Getting Started
+## Get Started
 Create a virtual environment
   ```sh
   pip install virtualenv
@@ -26,12 +26,30 @@ Run the following commands in the terminal to install required packages
   ```sh
   pip install -r requirements.txt
   ```
-## Reproducibility
+## Reproduce
 Reproducing the study involves the following steps:
 
-Step 1: Preprocess the data
+Step 1: Create .env
+  ```sh
+  ROOT_DIR="path/to/root/directory"
+  QUERIES_PATH="path/to/queries.jsonl"   #queries.jsonl is used throughout Step 2a
+  CONTEXTS_PATH="path/to/contexts.jsonl" #contexts.jsonl is used throughout Step 2b
+  TRAINING_QUERIES_PATH="path/to/training_queries.tsv"  #queries.tsv is used as training input
+  TRAINING_CONTEXTS_PATH="path/to/training_contexts.tsv" #contexts.tsv is used as training input
+  TRAINING_TRIPLES_PATH="path/to/training_triples.tsv"
+  COLBERT_PATH="path/to/colbert_model"
+  ```
+Step 2a: Preprocess the data
   ```sh
   python3 preprocessing/training/preprocess_data.py
   ```
 
-## Code (what code files exist? What does each do? Is there an order needed to run them?)
+Step 2b: Run TF-IDF retriever to retrieve negative passages
+  ```sh
+  bash tfidf_retriever/run_retriever.sh
+  ```
+
+Step 3: Start training
+  ```sh
+  python3 training/training.py
+  ```
