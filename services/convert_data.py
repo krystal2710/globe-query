@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-def convert_quad(input_filename, output_filename, contexts_filename = os.getenv("CONTEXTS_PATH"), queries_filename = os.getenv("QUERIES_PATH")):
+def convert_quad(input_filename, output_filename, contexts_filename , queries_filename):
     """
     Convert hierarchical data in input_filename to tabular data and save it to output_filename.
     """ 

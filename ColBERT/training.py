@@ -17,7 +17,7 @@ def train():
         config = ColBERTConfig(bsize=8, lr=1e-05, warmup=20_000, doc_maxlen=180, dim=128, attend_to_mask_tokens=False, nway=2, accumsteps=1, similarity='cosine', use_ib_negatives=True)
         trainer = Trainer(triples=triples, queries=queries, collection=collection, config=config)
 
-        trainer.train(checkpoint='bert-base-multilingual-cased')  # or start from scratch, like `bert-base-uncased`
+        trainer.train(checkpoint='FacebookAI/xlm-roberta-large')  # or start from scratch, like `bert-base-uncased`
 
 
 if __name__ == '__main__':

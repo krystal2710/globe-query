@@ -9,6 +9,10 @@ load_dotenv()
 import sys
 sys.path.append(os.getenv('ROOT_DIR'))
 
+PROCESSED_DATA_DIR = os.getenv('PROCESSED_DATA_DIR')
+PROCESSED_TRAINING_CONTEXTS_PATH= "{dir}/contexts_train.jsonl".format(dir=PROCESSED_DATA_DIR)
+PROCESSED_TRAINING_QUERIES_PATH= "{dir}/queries_train.jsonl".format(dir=PROCESSED_DATA_DIR)
+
 # RETRIEVE THE CURRENT DIRECTORY =====================================================================================================
 
 def read_dataset(path):
@@ -52,13 +56,13 @@ def prepare_db(dataset_name, PATHS):
 
     #Read the contexts file
     context_search = {}
-    with jsonlines.open(os.getenv("CONTEXTS_PATH")) as reader:
+    with jsonlines.open(PROCESSED_TRAINING_CONTEXTS_PATH) as reader:
         for line in reader:
             context_search[line["context_id"]] = line["context"]
 
     #Read the queries file
     query_search = {}
-    with jsonlines.open(os.getenv("QUERIES_PATH")) as reader:
+    with jsonlines.open(PROCESSED_TRAINING_QUERIES_PATH) as reader:
         for line in reader:
             query_search[line["query_id"]] = line["query"]
 

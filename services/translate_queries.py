@@ -10,8 +10,9 @@ sys.path.append(os.getenv('ROOT_DIR'))
 
 from services.jsonl import read_contexts
 from services.jsonl import read_queries
-    
-def translate_all(input_filename, input_lang, output_filename, output_lang_lists, batch_size=10):
+
+
+def translate_all(input_filename, input_lang, output_filename, output_lang_lists, queries_filepath, batch_size=10):
     """
     Translates the queries in the input file from the input language to multiple output languages and saves to an output file.
     """
@@ -29,8 +30,8 @@ def translate_all(input_filename, input_lang, output_filename, output_lang_lists
     output_file = open(output_filename, 'w')
     
     #Read the query files
-    queries = read_queries(os.getenv("QUERIES_PATH"))
-    queries_file = open(os.getenv("QUERIES_PATH"), 'a')
+    queries = read_queries(queries_filepath)
+    queries_file = open(queries_filepath, 'a')
 
     #Add the original query-context pair to the output file
     for row in data:
