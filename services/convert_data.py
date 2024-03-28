@@ -1,10 +1,9 @@
 import json
-import uuid
 import os
 from dotenv import load_dotenv
 load_dotenv()
 
-def convert_quad(input_filename, output_filename, contexts_filename , queries_filename):
+def convert_quad(input_filename, output_filename, contexts_filename , queries_filename, data_name):
     """
     Convert hierarchical data in input_filename to tabular data and save it to output_filename.
     """ 
@@ -20,11 +19,14 @@ def convert_quad(input_filename, output_filename, contexts_filename , queries_fi
     queries = open(queries_filename, 'a')
 
     res = []
+    context_idx = 0
+    query_idx = 0
     for article in data:
         for p in article["paragraphs"]:
 
             #add new context to context file
-            context_id = str(uuid.uuid4())
+            context_id = "c" + data_name + str(context_idx)
+            context_idx += 1
             new_context = {"context_id": context_id, "context": p["context"]}
             contexts.write(json.dumps(new_context) + "\n")
 
@@ -33,7 +35,8 @@ def convert_quad(input_filename, output_filename, contexts_filename , queries_fi
                     continue
                 
                 #add new query to query file
-                query_id = str(uuid.uuid4())
+                query_id = "q" + data_name + str(query_idx)
+                query_idx += 1
                 new_query = {"query_id": query_id, "query": qas["question"]}
                 queries.write(json.dumps(new_query) + "\n")
                 

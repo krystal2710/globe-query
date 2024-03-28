@@ -10,8 +10,8 @@ import sys
 sys.path.append(os.getenv('ROOT_DIR'))
 
 PROCESSED_DATA_DIR = os.getenv('PROCESSED_DATA_DIR')
-PROCESSED_TRAINING_CONTEXTS_PATH= "{dir}/contexts_train.jsonl".format(dir=PROCESSED_DATA_DIR)
-PROCESSED_TRAINING_QUERIES_PATH= "{dir}/queries_train.jsonl".format(dir=PROCESSED_DATA_DIR)
+PROCESSED_TRAINING_CONTEXTS_PATH= "{dir}/contexts-train.jsonl".format(dir=PROCESSED_DATA_DIR)
+PROCESSED_TRAINING_QUERIES_PATH= "{dir}/queries-train.jsonl".format(dir=PROCESSED_DATA_DIR)
 
 # RETRIEVE THE CURRENT DIRECTORY =====================================================================================================
 
@@ -62,7 +62,8 @@ def prepare_db(dataset_name, PATHS):
 
     #Read the queries file
     query_search = {}
-    with jsonlines.open(PROCESSED_TRAINING_QUERIES_PATH) as reader:
+    with open(PROCESSED_TRAINING_QUERIES_PATH) as f:
+        reader = jsonlines.Reader(f)
         for line in reader:
             query_search[line["query_id"]] = line["query"]
 

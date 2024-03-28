@@ -12,8 +12,8 @@ def main():
 
     RAW_DATA_DIR = os.getenv('RAW_DATA_DIR')
     PROCESSED_DATA_DIR = os.getenv('PROCESSED_DATA_DIR')
-    PROCESSED_TRAINING_CONTEXTS_PATH= "{dir}/contexts_train.jsonl".format(dir=PROCESSED_DATA_DIR)
-    PROCESSED_TRAINING_QUERIES_PATH= "{dir}/queries_train.jsonl".format(dir=PROCESSED_DATA_DIR)
+    PROCESSED_TRAINING_CONTEXTS_PATH= "{dir}/contexts-train.jsonl".format(dir=PROCESSED_DATA_DIR)
+    PROCESSED_TRAINING_QUERIES_PATH= "{dir}/queries-train.jsonl".format(dir=PROCESSED_DATA_DIR)
 
     #Parse argument for preprocessing each Question Answering Dataset. Args: data (str): Raw dataset name, e.g. squad-train, korquad-train, fquad-train
     parser = argparse.ArgumentParser(description='Preprocess each Question Answering Dataset')
@@ -21,9 +21,9 @@ def main():
     args = parser.parse_args()
 
     #convert datasets from hierarchical model to relational model (tabular format)
-    RAW_DATA_PATH = "{dir}/{data}.json".format(dir=RAW_DATA_DIR, data=args.data)
-    TABULAR_DATA_PATH =  "{dir}/{data}.json".format(dir=PROCESSED_DATA_DIR, data=args.data)
-    convert_quad(RAW_DATA_PATH, TABULAR_DATA_PATH, PROCESSED_TRAINING_CONTEXTS_PATH, PROCESSED_TRAINING_QUERIES_PATH)
+    RAW_DATA_PATH = "{dir}/{data}-train.json".format(dir=RAW_DATA_DIR, data=args.data)
+    TABULAR_DATA_PATH =  "{dir}/{data}-train.json".format(dir=PROCESSED_DATA_DIR, data=args.data)
+    convert_quad(RAW_DATA_PATH, TABULAR_DATA_PATH, PROCESSED_TRAINING_CONTEXTS_PATH, PROCESSED_TRAINING_QUERIES_PATH, args.data)
 
 if __name__ == '__main__':
     main()
