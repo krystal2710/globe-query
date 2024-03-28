@@ -10,8 +10,8 @@ import sys
 sys.path.append(os.getenv('ROOT_DIR'))
 
 PROCESSED_DATA_DIR = os.getenv('PROCESSED_DATA_DIR')
-PROCESSED_TRAINING_CONTEXTS_PATH= "{dir}/contexts-train.jsonl".format(dir=PROCESSED_DATA_DIR)
-PROCESSED_TRAINING_QUERIES_PATH= "{dir}/queries-train.jsonl".format(dir=PROCESSED_DATA_DIR)
+PROCESSED_TRAINING_CONTEXTS_PATH = os.path.join(PROCESSED_DATA_DIR,"contexts-train.jsonl")
+PROCESSED_TRAINING_QUERIES_PATH = os.path.join(PROCESSED_DATA_DIR,"queries-train.jsonl")
 
 # RETRIEVE THE CURRENT DIRECTORY =====================================================================================================
 

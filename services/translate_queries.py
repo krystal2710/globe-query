@@ -1,6 +1,6 @@
 import json
-import uuid
 from transformers import MBartForConditionalGeneration, MBart50TokenizerFast
+import jsonlines
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -12,7 +12,7 @@ from services.jsonl import read_contexts
 from services.jsonl import read_queries
 
 
-def translate_all(input_filename, input_lang, output_filename, output_lang_lists, queries_filepath, batch_size=10):
+def translate_all(input_filename, input_lang, output_filename, output_lang_lists, input_queries_filepath, output_queries_filepath, batch_size=10):
     """
     Translates the queries in the input file from the input language to multiple output languages and saves to an output file.
     """
@@ -30,14 +30,21 @@ def translate_all(input_filename, input_lang, output_filename, output_lang_lists
     output_file = open(output_filename, 'w')
     
     #Read the query files
-    queries = read_queries(queries_filepath)
-    queries_file = open(queries_filepath, 'a')
+    queries = {}
+    queries_file = open(output_queries_filepath, 'w')
+
+    with jsonlines.open(input_queries_filepath) as reader:
+        for line in reader:
+            queries[line["query_id"]] = line["query"]
+            queries_file.write(json.dumps(line)+"\n")
 
     #Add the original query-context pair to the output file
     for row in data:
         original_row = {"context_id": row["context_id"], "query_id": row["query_id"], "orig_query_id": row["query_id"],"context_lang":input_lang, "query_lang":input_lang}
         output_file.write(json.dumps(original_row) + "\n")
-
+    
+    #Add the original query to the query file
+    
     lang_dict = {"en":"en_XX", "de":"de_DE", "ko":"ko_KR", "vi":"vi_VN", "fr":"fr_XX"}
 
     for output_lang in output_lang_lists:
@@ -53,7 +60,7 @@ def translate_all(input_filename, input_lang, output_filename, output_lang_lists
 
             batch_res = []
             for i, j in enumerate(range(start, min(start+batch_size,len(data)))):
-                query_id = str(uuid.uuid4())
+                query_id = data[j]["query_id"] + output_lang
                 queries_file.write(json.dumps({"query_id": query_id, "query": translated_queries[i]}) + "\n")
 
                 new_row = {"context_id":data[j]["context_id"], "query_id": query_id, "orig_query_id": data[j]["query_id"], "context_lang":input_lang, "query_lang":output_lang}

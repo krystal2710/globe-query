@@ -45,9 +45,9 @@ if __name__ == '__main__':
 
 
     # Store the information of the dataset to the class
-    PATHS.DATA['dataset_path'] = "{dir}/{data}-train.json".format(dir=PROCESSED_DATA_DIR, data=args.data)
+    PATHS.DATA['dataset_path'] = os.path.join(PROCESSED_DATA_DIR, "{data}-train.json".format(data=args.data))
     PATHS.DATA['dataset_name'] = args.data
-    PATHS.DATA['save_path'] = "{dir}/{data}-train-neg.json".format(dir=PROCESSED_DATA_DIR, data=args.data)
+    PATHS.DATA['save_path'] = os.path.join(PROCESSED_DATA_DIR, "{data}-train-neg.json".format(data=args.data))
 
     # 1
     # Retrieve top k contexts
