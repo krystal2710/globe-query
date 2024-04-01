@@ -3,17 +3,20 @@ import json
 import os
 import sys
 from dotenv import load_dotenv
+import random
 load_dotenv()
 sys.path.append(os.getenv('ROOT_DIR'))
 
-def create_triples(data_filepath, data_neg_filepath, triples_filepath = os.getenv("TRAINING_TRIPLES_PATH")):
+def create_triples(data_filepath, data_neg_filepath, removed_queries):
     print("Creating triples from {data_filepath} and {data_neg_filepath}".format(data_filepath = data_filepath, data_neg_filepath = data_neg_filepath))
+
     #Read the query-context jsonl file
     with open(data_filepath, "r") as data_file:
         reader = jsonlines.Reader(data_file)
         data = []
         for line in reader:
-            data.append(line)
+            if line["query_id"] not in removed_queries:
+                data.append(line)
         
     #Read the query-negative context file
     with open(data_neg_filepath, "r") as data_neg_file:
@@ -25,7 +28,7 @@ def create_triples(data_filepath, data_neg_filepath, triples_filepath = os.geten
             data_neg[line["query_id"]].append(line["context_id"])
     
     #Open triples file
-    triples_file = open(triples_filepath, "a")
+    triples = []
 
     #iterate through each query
     n = len(data)
@@ -42,13 +45,56 @@ def create_triples(data_filepath, data_neg_filepath, triples_filepath = os.geten
             #iterate through each negative context
             for neg_pid in neg_pid_list:
                 triple = [qid, pos_pid, neg_pid]
-                triples_file.write(json.dumps(triple) + "\n")
+                triples.append(triple)
                 count_triples += 1
 
-    triples_file.close()
     print("Created {i} triples".format(i = count_triples))
     print("There are {i}/{total} not found queries".format(i=count_not_found, total=n))
+    return triples
 
+def create_all_triples(input_dir, output_dir, removed_queries):
+    triples_file = open(os.path.join(output_dir,"triples-shuffled.jsonl"), "w")
+    triples = []
+    for filename in os.listdir(input_dir):
+        if filename.endswith("-train-translated.jsonl"):
+            triples += create_triples(os.path.join(input_dir, filename), os.path.join(input_dir, filename.replace("-train-translated.jsonl", "-train-neg.json")), removed_queries)
+    
+    #shuffle triples
+    random.shuffle(triples)
+
+    for triple in triples:
+        triples_file.write(json.dumps(triple) + "\n")
+    
+def merge_queries_files(dir, output_filepath):
+    '''
+    dir: directory that contains all queries corpuses need to be merged into one large corpus
+    '''
+    queries = {}
+    filenames = []
+    removed_queries = set()
+    for filename in os.listdir(dir):
+        if filename.startswith("queries") and filename.endswith("-train.jsonl"):
+            filenames.append(filename)
+            data_filepath = os.path.join(dir, filename)
+            with open(data_filepath) as file:
+                reader = jsonlines.Reader(file)
+                for line in reader:
+                    if line["query_id"] in queries and queries[line["query_id"]] != line["query"]:
+                        print("Warning: Duplicated queries, query: {query}, query_id: {query_id}".format(query=line["query"], query_id=line["query_id"]))
+                    queries[line["query_id"]] = line["query"]
+    
+    with open(output_filepath, "w") as output_data_file:
+        for id, query in queries.items():
+            query = query.replace("\n","")
+            if query and not query.isspace():
+                output_data_file.write("{id}\t{data}\n".format(id = id, data = query))
+            else:
+                removed_queries.add(id)
+    
+    print("Merged query files: {files}".format(files = filenames))
+    print("Saved to: {path}".format(path = output_filepath))
+
+    return removed_queries
 
 def jsonl_to_tsv(data_filepath, output_data_filepath):
     """
@@ -68,20 +114,16 @@ def jsonl_to_tsv(data_filepath, output_data_filepath):
     output_data_file.close()
     print("Converted {file} to {output_file}".format(file = data_filepath, output_file = output_data_filepath))
 
-def create_all_triples():
-    create_triples("data/processed/squad-train-translated.jsonl", "data/processed/squad-train-neg.json")
-    create_triples("data/processed/korquad-train-translated.jsonl", "data/processed/korquad-train-neg.json")
-    create_triples("data/processed/fquad-train-translated.jsonl", "data/processed/fquad-train-neg.json")
-    create_triples("data/processed/uitviquad-train-translated.jsonl", "data/processed/uitviquad-train-neg.json")
-    create_triples("data/processed/germanquad-train-translated.jsonl", "data/processed/germanquad-train-neg.json")
-
-def convert_queries_and_contexts():
-    jsonl_to_tsv(os.getenv("QUERIES_PATH"), os.getenv("TRAINING_QUERIES_PATH"))
-    jsonl_to_tsv(os.getenv("CONTEXTS_PATH"), os.getenv("TRAINING_CONTEXTS_PATH"))
 
 def main():
-    convert_queries_and_contexts()
-    create_all_triples()
+    
+    PROCESSED_DATA_DIR = os.getenv('PROCESSED_DATA_DIR')
+    TRAINING_DATA_DIR = os.getenv('TRAINING_DATA_DIR')
+    removed_queries = merge_queries_files(dir = PROCESSED_DATA_DIR, output_filepath = os.path.join(TRAINING_DATA_DIR,"queries-shuffled.tsv"))
+
+    jsonl_to_tsv(os.path.join(PROCESSED_DATA_DIR,"contexts-train.jsonl"), os.path.join(TRAINING_DATA_DIR,"contexts-shuffled.tsv"))
+
+    create_all_triples(output_dir=TRAINING_DATA_DIR, input_dir=PROCESSED_DATA_DIR, removed_queries=removed_queries)
 
 if __name__=="__main__":
     main()
