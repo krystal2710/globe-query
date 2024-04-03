@@ -53,7 +53,7 @@ def create_triples(data_filepath, data_neg_filepath, removed_queries):
     return triples
 
 def create_all_triples(input_dir, output_dir, removed_queries):
-    triples_file = open(os.path.join(output_dir,"triples-shuffled.jsonl"), "w")
+    triples_file = open(os.path.join(output_dir,"triples.jsonl"), "w")
     triples = []
     for filename in os.listdir(input_dir):
         if filename.endswith("-train-translated.jsonl"):
@@ -119,9 +119,9 @@ def main():
     
     PROCESSED_DATA_DIR = os.getenv('PROCESSED_DATA_DIR')
     TRAINING_DATA_DIR = os.getenv('TRAINING_DATA_DIR')
-    removed_queries = merge_queries_files(dir = PROCESSED_DATA_DIR, output_filepath = os.path.join(TRAINING_DATA_DIR,"queries-shuffled.tsv"))
+    removed_queries = merge_queries_files(dir = PROCESSED_DATA_DIR, output_filepath = os.path.join(TRAINING_DATA_DIR,"queries.tsv"))
 
-    jsonl_to_tsv(os.path.join(PROCESSED_DATA_DIR,"contexts-train.jsonl"), os.path.join(TRAINING_DATA_DIR,"contexts-shuffled.tsv"))
+    jsonl_to_tsv(os.path.join(PROCESSED_DATA_DIR,"contexts-train.jsonl"), os.path.join(TRAINING_DATA_DIR,"contexts.tsv"))
 
     create_all_triples(output_dir=TRAINING_DATA_DIR, input_dir=PROCESSED_DATA_DIR, removed_queries=removed_queries)
 

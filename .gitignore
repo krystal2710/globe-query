@@ -167,6 +167,7 @@ test*.*
 visuals.ipynb
 /data/
 /experiments/
+/tfidf_retriever/retriever_component
 
 #ColBERT .gitignore
 /ColBERT/experiments/
@@ -175,6 +176,6 @@ visuals.ipynb
 /ColBERT/logs/
 /ColBERT/mlruns/
 /ColBERT/profiler/
-/ColBERT/logs/
+
 # Other
 .vscode

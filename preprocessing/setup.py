@@ -6,7 +6,7 @@ load_dotenv()
 sys.path.append(os.getenv('ROOT_DIR'))
 
 PROCESSED_DATA_DIR = os.getenv('PROCESSED_DATA_DIR')
-TRAINING_INPUT_DATA_DIR = os.getenv('TRAINING_INPUT_DATA_DIR')
+TRAINING_DATA_DIR = os.getenv('TRAINING_DATA_DIR')
 PROCESSED_TRAINING_CONTEXTS_PATH = os.path.join(PROCESSED_DATA_DIR,"contexts-train.jsonl")
 PROCESSED_TRAINING_QUERIES_PATH = os.path.join(PROCESSED_DATA_DIR,"queries-train.jsonl")
 
@@ -31,8 +31,8 @@ def main():
     if not os.path.exists(PROCESSED_DATA_DIR):
         os.system("mkdir {dir}".format(dir=PROCESSED_DATA_DIR))
 
-    if not os.path.exists(TRAINING_INPUT_DATA_DIR):
-        os.system("mkdir {dir}".format(dir=TRAINING_INPUT_DATA_DIR))
+    if not os.path.exists(TRAINING_DATA_DIR):
+        os.system("mkdir {dir}".format(dir=TRAINING_DATA_DIR))
 
     #check for context and query file, create if not exist
     create_context_and_query_files()
