@@ -178,6 +178,7 @@ visuals.ipynb
 /ColBERT/mlruns/
 /ColBERT/profiler/
 /ColBERT/docs/
+ColBERT/downloads/
 
 # Other
 .vscode
