@@ -9,7 +9,7 @@ from colbert.infra.run import Run
 
 def print_progress(scores):
     positive_avg, negative_avg = round(scores[:, 0].mean().item(), 2), round(scores[:, 1].mean().item(), 2)
-    print("#>>>AAAAAAAAAA   ", positive_avg, negative_avg, '\t\t|\t\t', positive_avg - negative_avg)
+    print("#>>>   ", positive_avg, negative_avg, '\t\t|\t\t', positive_avg - negative_avg)
 
 
 def manage_checkpoints(args, colbert, optimizer, batch_idx, savepath=None, consumed_all_triples=False):

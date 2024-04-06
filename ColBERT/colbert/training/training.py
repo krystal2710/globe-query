@@ -118,16 +118,15 @@ def train(config: ColBERTConfig, triples, queries=None, collection=None):
                     loss = nn.CrossEntropyLoss()(scores, labels[:scores.size(0)])
 
                 if config.use_ib_negatives:
-                    # if config.rank < 1:
-                    #     print('\t\t\t\tLoss:', loss.item(), ib_loss.item())
+                    if config.rank < 1:
+                        print('\t\t\t\t', loss.item(), ib_loss.item())
 
                     loss += ib_loss
 
                 loss = loss / config.accumsteps
 
-            # if config.rank < 1:
-                # print("Scores:")
-                # print_progress(scores)
+            if config.rank < 1:
+                print_progress(scores)
 
             amp.backward(loss)
 
