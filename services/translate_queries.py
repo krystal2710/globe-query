@@ -16,11 +16,13 @@ def translate_all(input_filename, input_lang, output_filename, output_lang_lists
     """
     Translates the queries in the input file from the input language to multiple output languages and saves to an output file.
     """
+    lang_dict = {"en":"en_XX", "de":"de_DE", "ko":"ko_KR", "vi":"vi_VN", "fr":"fr_XX"}
+
     #Load translation model a.k.a mbart fine-tuned checkpt
     model = MBartForConditionalGeneration.from_pretrained("facebook/mbart-large-50-many-to-many-mmt")
     model.cuda()
     tokenizer = MBart50TokenizerFast.from_pretrained("facebook/mbart-large-50-many-to-many-mmt")
-    tokenizer.src_lang = input_lang
+    tokenizer.src_lang = lang_dict[input_lang]
 
     print("Translating {input_filename}".format(input_filename=input_filename))
 
@@ -45,7 +47,6 @@ def translate_all(input_filename, input_lang, output_filename, output_lang_lists
     
     #Add the original query to the query file
     
-    lang_dict = {"en":"en_XX", "de":"de_DE", "ko":"ko_KR", "vi":"vi_VN", "fr":"fr_XX"}
 
     for output_lang in output_lang_lists:
         for start in range(0,len(data),batch_size):
@@ -58,14 +59,12 @@ def translate_all(input_filename, input_lang, output_filename, output_lang_lists
             )
             translated_queries = tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)
 
-            batch_res = []
-            for i, j in enumerate(range(start, min(start+batch_size,len(data)))):
+            for j in range(start, min(start+batch_size,len(data))):
                 query_id = data[j]["query_id"] + output_lang
                 queries_file.write(json.dumps({"query_id": query_id, "query": translated_queries[i]}) + "\n")
 
                 new_row = {"context_id":data[j]["context_id"], "query_id": query_id, "orig_query_id": data[j]["query_id"], "context_lang":input_lang, "query_lang":output_lang}
-                batch_res.append(new_row)
-                output_file.write(json.dumps(batch_res[i]) + "\n")
+                output_file.write(json.dumps(new_row) + "\n")
 
             print("Finished translating {n} rows from {input_lang} to {output_lang}".format(n=min(start+batch_size,len(data)), input_lang=input_lang,output_lang=output_lang))
 

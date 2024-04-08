@@ -1,4 +1,4 @@
-# Crosslingual Efficient and Effective Passage Search
+# Multilingual Efficient and Effective Passage Search
 ## Brief Description
 The purpose of the study is to develop mColBERT (Multilingual ColBERT), a cross-lingual search engine capable of effectively retrieving information across multiple languages. That is, given a query in one language, the search engine is capable of finding relevant contexts in other languages, effectively overcoming the challenges of language barriers in information retrieval.
 
@@ -9,6 +9,7 @@ Additionally, this research explores the effectiveness of mColBERT across differ
 - krystally2710@gmail.com
 
 ## Data
+The study uses SQuAD, KorQuAD, UIT-ViQuAD, GermanQuAD, FQuAD as foundational data. Download the data at https://huggingface.co/datasets/krystal2710/mColBERT-data
 
 ## Get Started
 Create a virtual environment
@@ -31,25 +32,37 @@ Reproducing the study involves the following steps:
 
 Step 1: Create .env
   ```sh
-  ROOT_DIR="path/to/root/directory"
-  QUERIES_PATH="path/to/queries.jsonl"   #queries.jsonl is used throughout Step 2a
-  CONTEXTS_PATH="path/to/contexts.jsonl" #contexts.jsonl is used throughout Step 2b
-  TRAINING_QUERIES_PATH="path/to/training_queries.tsv"  #queries.tsv is used as training input
-  TRAINING_CONTEXTS_PATH="path/to/training_contexts.tsv" #contexts.tsv is used as training input
-  TRAINING_TRIPLES_PATH="path/to/training_triples.tsv"
-  COLBERT_PATH="path/to/colbert_model"
-  ```
-Step 2a: Preprocess the data
-  ```sh
-  python3 preprocessing/training/preprocess_data.py
+  ROOT_DIR=path/to/root/directory
+  RAW_DATA_DIR=path/to/data/raw/directory
+  PROCESSED_DATA_DIR=path/to/data/processed/directory
+  TRAINING_DATA_DIR=path/to/training_data/directory
+  TESTING_DATA_DIR=path/to/testing_data/directory
+  TFIDF_RETRIEVER_DIR=path/to/tfidf_retriever/directory
+  COLBERT_PATH=path/to/colbert/directory
   ```
 
-Step 2b: Run TF-IDF retriever to retrieve negative passages
+Step 2: Download the data at https://huggingface.co/datasets/krystal2710/mColBERT-data
+
+Step 3: Preprocess the data
   ```sh
-  bash tfidf_retriever/run_retriever.sh
+  python3 preprocessing/setup.py
+  python3 preprocessing/preprocess_data.py --data [data_name] #data_name should be squad, korquad, fquad, etc. Run for each separately
   ```
 
-Step 3: Start training
+Step 4: Translate 
+  ```sh
+  python3 preprocessing/translate_data.py --data [data_name] --lang [data_lang] #data_lang should en, ko, vi, fr, de. Run for each separately
+  ```
+
+Step 5: Run TF-IDF retriever to retrieve negative passages
+  ```sh
+  python3 preprocessing/retrieve_neg.py --data [data_name] #data_name should be squad, korquad, fquad, etc. Run for each separately
+  ```
+
+Step 6: Training
   ```sh
   python3 training/training.py
   ```
+
+Step 7: Testing
+  See `testing.ipynb`
