@@ -67,4 +67,4 @@ Step 6: Training
   ```
 
 Step 7: Testing
-  See `testing.ipynb`
+  See `notebooks/testing.ipynb`
