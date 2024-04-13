@@ -23,7 +23,7 @@ def main():
     #convert datasets from hierarchical model to relational model (tabular format)
     RAW_DATA_PATH = os.path.join(RAW_DATA_DIR, "{data}-train.json".format(data=args.data))
     TABULAR_DATA_PATH =  os.path.join(PROCESSED_DATA_DIR, "{data}-train.json".format(data=args.data))
-    convert_quad(RAW_DATA_PATH, TABULAR_DATA_PATH, PROCESSED_TRAINING_CONTEXTS_PATH, PROCESSED_TRAINING_QUERIES_PATH, args.data)
+    convert_quad(RAW_DATA_PATH, TABULAR_DATA_PATH, PROCESSED_TRAINING_CONTEXTS_PATH, PROCESSED_TRAINING_QUERIES_PATH)
 
 if __name__ == '__main__':
     main()

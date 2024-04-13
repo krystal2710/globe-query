@@ -23,8 +23,10 @@ def main():
     TABULAR_DATA_PATH = os.path.join(PROCESSED_DATA_DIR, "{data}-train.json".format(data=args.data))
     TRANSLATED_DATA_PATH = os.path.join(PROCESSED_DATA_DIR, "{data}-train-translated.json".format(data=args.data))
     TRANSLATED_LANGUAGES = [lang for lang in ["en", "de", "ko", "fr", "vi"] if lang != args.lang]
-    OUTPUT_QUERIES_PATH = os.path.join(PROCESSED_DATA_DIR, "queries-{lang}-train.jsonl".format(lang = args.lang)) 
-    translate_all(TABULAR_DATA_PATH, args.lang, TRANSLATED_DATA_PATH, TRANSLATED_LANGUAGES, PROCESSED_TRAINING_QUERIES_PATH, OUTPUT_QUERIES_PATH)
+
+    # NOTE: uncomment this line if run code in paralell
+    # OUTPUT_QUERIES_PATH = os.path.join(PROCESSED_DATA_DIR, "queries-{lang}-train.jsonl".format(lang = args.lang)) 
+    translate_all(TABULAR_DATA_PATH, args.lang, TRANSLATED_DATA_PATH, TRANSLATED_LANGUAGES, PROCESSED_TRAINING_QUERIES_PATH, PROCESSED_TRAINING_QUERIES_PATH)
 
 if __name__ == '__main__':
     main()

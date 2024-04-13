@@ -26,20 +26,22 @@ def translate_all(input_filename, input_lang, output_filename, output_lang_lists
 
     print("Translating {input_filename}".format(input_filename=input_filename))
 
+    #Get query corpus for search purpose
+    queries = {}
+
+    with jsonlines.open(input_queries_filepath) as reader:
+        for line in reader:
+            queries[line["query_id"]] = line["query"]
+        query_id = int(line["query_id"]) + 1
+
+    #Read query corpus output file
+    queries_file = open(output_queries_filepath, 'a')
+
     #Read the input and output file
     with open(input_filename) as input_file:
         data = json.load(input_file)
     output_file = open(output_filename, 'w')
     
-    #Read the query files
-    queries = {}
-    queries_file = open(output_queries_filepath, 'w')
-
-    with jsonlines.open(input_queries_filepath) as reader:
-        for line in reader:
-            queries[line["query_id"]] = line["query"]
-            queries_file.write(json.dumps(line)+"\n")
-
     #Add the original query-context pair to the output file
     for row in data:
         original_row = {"context_id": row["context_id"], "query_id": row["query_id"], "orig_query_id": row["query_id"],"context_lang":input_lang, "query_lang":input_lang}
@@ -47,7 +49,6 @@ def translate_all(input_filename, input_lang, output_filename, output_lang_lists
     
     #Add the original query to the query file
     
-
     for output_lang in output_lang_lists:
         for start in range(0,len(data),batch_size):
             batch = [queries[data[i]["query_id"]] for i in range(start, min(start+batch_size,len(data)))]
@@ -59,12 +60,12 @@ def translate_all(input_filename, input_lang, output_filename, output_lang_lists
             )
             translated_queries = tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)
 
-            for j in range(start, min(start+batch_size,len(data))):
-                query_id = data[j]["query_id"] + output_lang
+            for i, j in enumerate(range(start, min(start+batch_size,len(data)))):
                 queries_file.write(json.dumps({"query_id": query_id, "query": translated_queries[i]}) + "\n")
 
                 new_row = {"context_id":data[j]["context_id"], "query_id": query_id, "orig_query_id": data[j]["query_id"], "context_lang":input_lang, "query_lang":output_lang}
                 output_file.write(json.dumps(new_row) + "\n")
+                query_id += 1
 
             print("Finished translating {n} rows from {input_lang} to {output_lang}".format(n=min(start+batch_size,len(data)), input_lang=input_lang,output_lang=output_lang))
 
