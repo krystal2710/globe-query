@@ -21,7 +21,7 @@ def main():
 
     #translate all queries from one language to all other languages and save to new files
     TABULAR_DATA_PATH = os.path.join(PROCESSED_DATA_DIR, "{data}-train.json".format(data=args.data))
-    TRANSLATED_DATA_PATH = os.path.join(PROCESSED_DATA_DIR, "{data}-train-translated.json".format(data=args.data))
+    TRANSLATED_DATA_PATH = os.path.join(PROCESSED_DATA_DIR, "{data}-train-translated.jsonl".format(data=args.data))
     TRANSLATED_LANGUAGES = [lang for lang in ["en", "de", "ko", "fr", "vi"] if lang != args.lang]
 
     # NOTE: uncomment this line if run code in paralell

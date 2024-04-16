@@ -2,7 +2,6 @@ import os
 import sys
 from dotenv import load_dotenv
 load_dotenv()
-sys.path.append(os.getenv('COLBERT_PATH'))
 from colbert.infra.run import Run
 from colbert.infra.config import ColBERTConfig, RunConfig
 from colbert import Trainer
@@ -11,7 +10,7 @@ from colbert import Trainer
 def train():
     # use 4 gpus (e.g. four A100s, but you can use fewer by changing nway,accumsteps,bsize).
     with Run().context(RunConfig(nranks=1)):
-        triples = os.path.join(os.getenv("TRAINING_DATA_DIR"), "triple.jsonl") # `wget https://huggingface.co/colbert-ir/colbertv2.0_msmarco_64way/resolve/main/examples.json?download=true` (26GB)
+        triples = os.path.join(os.getenv("TRAINING_DATA_DIR"), "triples.jsonl")
         queries = os.path.join(os.getenv("TRAINING_DATA_DIR"), "queries.tsv")
         collection = os.path.join(os.getenv("TRAINING_DATA_DIR"), "contexts.tsv")
 

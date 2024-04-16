@@ -19,6 +19,7 @@ def create_triples(data_filepath, data_neg_filepath, removed_queries):
                 data.append(line)
         
     #Read the query-negative context file
+    contexts = set()
     with open(data_neg_filepath, "r") as data_neg_file:
         data_neg = {}
         json_raw = json.load(data_neg_file)["data"]
@@ -26,7 +27,8 @@ def create_triples(data_filepath, data_neg_filepath, removed_queries):
             if line["query_id"] not in data_neg:
                 data_neg[line["query_id"]] = []
             data_neg[line["query_id"]].append(line["context_id"])
-    
+            contexts.add(line["context_id"])
+    contexts = list(contexts)
     #Open triples file
     triples = []
 
@@ -41,7 +43,11 @@ def create_triples(data_filepath, data_neg_filepath, removed_queries):
             neg_pid_list = data_neg[row["orig_query_id"]]
         except:
             count_not_found += 1
-        else:
+            random_neg_pid= random.choice(contexts)
+            while random_neg_pid==pos_pid:
+                random_neg_pid= random.choice(contexts)
+            neg_pid_list = [random_neg_pid]
+        finally:
             #iterate through each negative context
             for neg_pid in neg_pid_list:
                 triple = [qid, pos_pid, neg_pid]
@@ -64,6 +70,7 @@ def create_all_triples(input_dir, output_dir, removed_queries):
 
     for triple in triples:
         triples_file.write(json.dumps(triple) + "\n")
+    print(">> Created a total of {n} triples".format(n=len(triples)))
     
 def merge_queries_files(dir, output_filepath):
     '''
