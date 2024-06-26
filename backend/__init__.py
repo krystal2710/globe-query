@@ -1,38 +1,34 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 from functools import lru_cache
 import math
 import os
-from dotenv import load_dotenv
-
-from colbert.infra import Run, RunConfig, ColBERTConfig
 from colbert import Searcher
 from colbert.data import Collection
-
-load_dotenv()
+from sqlalchemy.orm import mapped_column
+from sqlalchemy import Integer, String, Date, Text, JSON, ForeignKey, Enum, TIMESTAMP
+from sqlalchemy_serializer import SerializerMixin
 
 app = Flask(__name__)
 counter = {"api" : 0}
 
+#set up sqlite
 class Base(DeclarativeBase):
   pass
 db = SQLAlchemy(model_class=Base)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db/data.sqlite"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.sqlite"
 db.init_app(app)
 
-
-INDEX_DIR = "backend/db/experiments/testing/indexes"
+#set up Searcher instance
+INDEX_DIR = "backend/db/experiments/ver1/indexes"
 nbits = 2   # encode each dimension with 2 bits
 doc_maxlen = 300   # truncate passages at 300 tokens
 index_name = f'{nbits}bits'
-import sys
-print(sys.path)
 collection = Collection("backend/db/contexts.tsv")
-# with Run().context(RunConfig(experiment=INDEX_DIR)):
 searcher = Searcher(index=index_name, index_root=INDEX_DIR, collection=collection)
-# checkpoint = '/Volumes/Users/ly_k1/Documents/mColBERT/experiments/default/none/2024-04/13/23.13.02/checkpoints/colbert'
 
+#service layer
 @lru_cache(maxsize=1000000)
 def api_search_query(query, k):
     print(f"Query={query}")
@@ -51,6 +47,10 @@ def api_search_query(query, k):
     topk = list(sorted(topk, key=lambda p: (-1 * p['score'], p['pid'])))
     return {"query" : query, "topk": topk}
 
+def api_request_data(lang):
+    pass
+
+#api layer
 @app.route("/api/search", methods=["GET"])
 def api_search():
     if request.method == "GET":
@@ -59,6 +59,23 @@ def api_search():
         return api_search_query(request.args.get("query"), request.args.get("k"))
     else:
         return ('', 405)
+
+@app.route("/api/data", methods=["GET"])
+def api_data():
+    if request.method == "GET":
+        return api_request_data(request.args.get("lang"))
+    
+class Context(db.Model, SerializerMixin):
+    __tablename__ = "context"
+    id = mapped_column(Integer, primary_key=True, nullable=False)
+    context = mapped_column(String, nullable=False)
+    lang = mapped_column(String, nullable=False)
+
+class Query(db.Model, SerializerMixin):
+    __tablename__ = "query"
+    id = mapped_column(Integer, primary_key=True, nullable=False)
+    context_id = mapped_column(Integer, ForeignKey("context.id"), nullable=False)
+    query = mapped_column(String, nullable=False)
 
 if __name__ == "__main__":
     app.run("0.0.0.0", int(os.getenv("PORT")))
