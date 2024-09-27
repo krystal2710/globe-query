@@ -41,7 +41,7 @@
         "index_name": "2bits",
         "overwrite": false,
         "root": "\/experiments",
-        "experiment": "testing",
+        "experiment": "ver1",
         "index_root": null,
         "name": "2024-06\/25\/22.38.55",
         "rank": 0,
